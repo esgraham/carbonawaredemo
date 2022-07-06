@@ -1,38 +1,55 @@
-.App {
-  text-align: center;
+body {
+  background-color: #fafafa;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1,h2,h3,h4,h5,h6 {
+  font-weight: 400;	
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+#header {
+  border-bottom: 5px solid #37474F;
+  color: #37474F;
+  margin-bottom: 1.5rem;
+  padding: 1rem 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#revenue-tag {
+  font-weight: inherit !important;
+  border-radius: 0px !important;
 }
 
-.App-link {
-  color: #61dafb;
+.app-card {
+  border: 0rem;
+  border-radius: 0rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.app-card-header {
+  background-color: #37474F;
+  border-radius: 0 !important;
+  color:	white;
+  margin-bottom: 0;
+  padding:	1rem;
 }
+
+.app-card-block {
+  border: 1px solid #cccccc;	
+}
+
+.app-shadow {
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+              0 1px 18px 0 rgba(0, 0, 0, 0.12),
+              0 3px 5px -1px rgba(0, 0, 0, 0.2);
+}
+
+#revenue-column-chart, #products-revenue-pie-chart, #orders-spline-chart {
+  height: 300px;
+  width: 100%;
+}	
+
+.selector {
+  height: 300px;
+  width: 100%;
+}
+
