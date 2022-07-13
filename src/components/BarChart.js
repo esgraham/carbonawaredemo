@@ -9,6 +9,8 @@ import {
     Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import * as Forecast from '../services/Forecast'
+import * as Actual from '../services/Actual'
 
 ChartJS.register(
     CategoryScale,
@@ -20,10 +22,48 @@ ChartJS.register(
 );
 
 class BarChart extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            forecastData: null,
+            error: false,
+            isLoaded: false,
+            selectedRetrospectiveDurationOption: props.selectedRetrospectiveDurationOption,
+            selectedRegionOption: props.selectedRegionOption,
+            selectedStartTime: props.selectedStartTime,
+            selectedEndTime: props.selectedEndTime,
+            show: true
+        };
+    }
+
+    async getChartData() {
+        try {
+
+            const forecastResponse = await Forecast.getForecastData(this.state.selectedRegionOption, this.state.forecastDuration, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime);
+            const actualResponse = await Actual.getActualData(this.state.selectedRegionOption, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime);
+
+            this.setState({ forecastData: forecastResponse });
+            this.setState({ actualData: actualResponse });
+            this.setState({ isLoaded: true });
+        } catch (error) {
+            this.setState({ error: true });
+        }
+    }
+
+    componentDidMount() {
+        this.getChartData();
+    }
+
     render() {
-        const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-        const data1 = [20, 35, 100, 56, 78, 90, 23];
-        const data2 = [28, 40, 110, 45, 62, 87, 12];
+        if (!this.state.isLoaded) {
+            return null /* or a loader/spinner */
+        }
+
+
+        const labels = this.state.forecastData.forecastDates.FormattedDate;
+        const data1 = this.state.forecastData.forecastValues;
+        const data2 = this.state.actualData.actualValues;
 
         const options = {
             indexAxis: 'y',
@@ -41,23 +81,23 @@ class BarChart extends Component {
                     display: true,
                     text: 'Original compared to Forecasted at ' + this.props.forcastduration + ' hours',
                 },
-            }
+            },
         };
 
         const data = {
             labels,
             datasets: [
                 {
-                    label: 'Dataset 1',
+                    label: 'Optimal (Forecast)',
                     data: data1,
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgb(0, 0, 0)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 },
                 {
-                    label: 'Dataset 2',
+                    label: 'Original (Actual)',
                     data: data2,
-                    borderColor: 'rgb(53, 162, 235)',
-                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                    borderColor: 'rgb(230, 0, 0)',
+                    backgroundColor: 'rgba(230, 0, 0, 0.5)',
                 },
             ],
         };

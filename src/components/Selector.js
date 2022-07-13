@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-import {workweekDates} from '../services/Dates'
 
 const durationOptions = [
     { value: 'year', label: 'Last Year' },
@@ -23,71 +22,77 @@ const regionOptions = [
 ];
 
 
-const timeOptions = [
-    { value: 'min', label: 'Minutes' },
-    { value: 'hour', label: 'Hours' }
-];
-
 class Selector extends Component {
-    state = {
-        selectedDurationOption: null,
-        selectedRegionOption: null,
-        selectedTimeOption: null,
-    };
-    handleDurationChange = (selectedDurationOption) => {
-        this.setState({ selectedDurationOption }, () =>
-            console.log(`Option selected:`, this.state.selectedDurationOption)
-        );
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            selectedRetrospectiveDurationOption: null,
+            selectedRegionOption: null,
+            selectedStartTime: null,
+            selectedEndTune: null,
+        };
+    }
+
+    handleRetrospectiveDurationChange = selectedRetrospectiveDurationOption => {
+        var value = selectedRetrospectiveDurationOption.value;
+        this.setState({ selectedRetrospectiveDurationOption });
+        this.props.handleRetrospectiveDurationChange({ value });
     };
     handleRegionChange = (selectedRegionOption) => {
-        this.setState({ selectedRegionOption }, () =>
-            console.log(`Option selected:`, this.state.selectedRegionOption)
-        );
+        var value = selectedRegionOption.value;
+        this.setState({ selectedRegionOption });
+        this.props.handleRegionChange({ value });
     };
-    handleTimeChange = (selectedTimeOption) => {
-        this.setState({ selectedTimeOption }, () =>
-            console.log(`Option selected:`, this.state.selectedTimeOption)
-        );
+    handleStartTimeChange = (selectedStartTime) => {
+        var value = selectedStartTime.target.value;
+        this.setState({ selectedStartTime });
+    this.props.handleStartTimeChange({ value });
     };
-
+    handleEndTimeChange = (selectedEndTime) => {
+        var value = selectedEndTime.target.value;
+        this.setState({ selectedEndTime });
+    this.props.handleEndTimeChange({ value });
+    };
     render() {
-        const { date } = workweekDates();
-        const { selectedDurationOption } = this.state;
-        const { selectedRegionOption } = this.state;
-        const { selectedTimeOption } = this.state;
-
+        const { selectedRetrospectiveDurationOption } = this.state;
+        const { selectedRegion } = this.state;
         return (
             <div>
-            <div style={{width: '300px', height: '50px'}}>
-            <Select
-                value={selectedDurationOption}
-                placeholder='Retrospective Time Period'
-                onChange={this.handleDurationChange}
-                options={durationOptions}
-            />
-            </div>
-            <div style={{width: '300px', height: '50px'}}>
-            <Select
-                value={selectedRegionOption}
-                onChange={this.handleRegionChange}
-                options={regionOptions}
-                placeholder='Region'
-            />
-            </div>
-            <div style={{width: '300px', display: 'inline-flex', 'justifyContent': 'space-around', height: '50px'}} >
-            <label>
-                Compute Length
-            </label>
-            <input type='text' style={{width: '50px', height: '40px'}}></input>
-            <Select
-                value={selectedTimeOption}
-                onChange={this.handleTimeChange}
-                options={timeOptions}
-            />
-            </div>
-            <div>
-                <button>Submit</button>
-            </div>
+                <div style={{ width: '300px', height: '50px', padding: '5px'  }}>
+                    <Select
+                        value={selectedRetrospectiveDurationOption}
+                        placeholder='Retrospective Time Period'
+                        onChange={this.handleRetrospectiveDurationChange}
+                        options={durationOptions}
+                    />
+                </div>
+                <div style={{ width: '600px'  }} >
+                    <p id="header" style={{ padding: '5px'}} ></p>
+                    <div style={{ display: 'inline-flex', padding: '5px' }} >
+                        <label style={{paddingRight: '5px'}}>Compute Start Time</label>
+                        <input type="time" onChange={this.handleStartTimeChange}/>
+                    </div>
+                    <div style={{ display: 'inline-flex',  padding: '5px' }} >
+                        <label style={{paddingRight: '5px'}}>Compute End Time</label>
+                        <input type="time" onChange={this.handleEndTimeChange} />
+                    </div>
+                    <div style={{ width: '300px', height: '50px', padding: '5px'  }}>
+                    <Select
+                        value={selectedRegion}
+                        onChange={this.handleRegionChange}
+                        options={regionOptions}
+                        placeholder='Region'
+                    />
+                </div>
+                </div>
+                <div style={{ width: '600px' }}>
+                    <p id="header"></p>
+                    <div style={{ display: 'inline-flex',  padding: '5px' }} >
+                        <label style={{paddingRight: '5px'}}>Forecast Generated At: </label>
+                        <input type="time" />
+                    </div>
+                </div>
             </div>
         );
     }

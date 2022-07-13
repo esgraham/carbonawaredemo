@@ -1,8 +1,9 @@
-export const workweekDates = function() {
+export function workweekDates() {
     var date = new Date();
     var day = date.getDay();
 
-    var arrDates = new Array();
+    var lstDates = new Array();
+    var lstFormattedValues = new Array();
 
     //if the day is Sunday - Friday return the Monday before
     if (day!==6)
@@ -16,17 +17,18 @@ export const workweekDates = function() {
     }
     
     //Add Start Date to list
-    arrDates.push(new Date(date))
+    lstDates.push(new Date(date));
+    lstFormattedValues.push(new Date(date).toDateString());
 
     //Add the rest of the week
     for (let i = 1; i < 5; i++) {
         date.setDate(date.getDate()+1)
-        arrDates.push(new Date(date))
+        lstDates.push(new Date(date));
+        lstFormattedValues.push(new Date(date).toDateString())
     }
 
-    console.log('Dates ' + arrDates)
-
-    return arrDates;
+    return {'Dates': lstDates, 'FormattedDate': lstFormattedValues};
 
 }
+
 
