@@ -30,7 +30,8 @@ class Selector extends Component {
             selectedRetrospectiveDurationOption: null,
             selectedRegionOption: null,
             selectedStartTime: null,
-            selectedEndTune: null,
+            selectedEndTime: null,
+            selectedGenerationTime: null
         };
     }
 
@@ -53,6 +54,11 @@ class Selector extends Component {
         var value = selectedEndTime.target.value;
         this.setState({ selectedEndTime });
     this.props.handleEndTimeChange({ value });
+    };
+    handleGeneratedAtChange = (selectedGenerationTime) => {
+        var value = selectedGenerationTime.target.value;
+        this.setState({ selectedGenerationTime });
+    this.props.handleGeneratedAtChange({ value });
     };
     render() {
         const { selectedRetrospectiveDurationOption } = this.state;
@@ -90,7 +96,7 @@ class Selector extends Component {
                     <p id="header"></p>
                     <div style={{ display: 'inline-flex',  padding: '5px' }} >
                         <label style={{paddingRight: '5px'}}>Forecast Generated At: </label>
-                        <input type="time" />
+                        <input type="time" onChange={this.handleGeneratedAtChange} />
                     </div>
                 </div>
             </div>

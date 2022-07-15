@@ -1,6 +1,32 @@
+import { Dates } from '../components/Dates';
+
+
 export function workweekDates() {
+    var prevDate = new Dates();
+
+    var lstDates = new Array();
+    var lstFormattedValues = new Array();
+
+    var date = prevDate.previousFriday();
+
+    //Move date to Sunday
+    date.setDate(date.getDate()-5)
+
+    //Add the week
+    for (let i = 1; i < 6; i++) {
+        date.setDate(date.getDate()+1)
+        lstDates.push(new Date(date));
+        lstFormattedValues.push(new Date(date).toDateString())
+    }
+
+    return {'Dates': lstDates, 'FormattedDate': lstFormattedValues};
+
+}
+
+
+function monthDates() {
     var date = new Date();
-    var day = date.getDay();
+    var day = date.previousMonthDays();
 
     var lstDates = new Array();
     var lstFormattedValues = new Array();

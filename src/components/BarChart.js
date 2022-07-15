@@ -27,20 +27,22 @@ class BarChart extends Component {
 
         this.state = {
             forecastData: null,
+            actualData: null,
             error: false,
             isLoaded: false,
+            forecastDuration: props.forcastduration,
             selectedRetrospectiveDurationOption: props.selectedRetrospectiveDurationOption,
             selectedRegionOption: props.selectedRegionOption,
             selectedStartTime: props.selectedStartTime,
             selectedEndTime: props.selectedEndTime,
-            show: true
+            selectedGenerationTime: props.selectedGenerationTime
         };
     }
 
     async getChartData() {
         try {
 
-            const forecastResponse = await Forecast.getForecastData(this.state.selectedRegionOption, this.state.forecastDuration, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime);
+            const forecastResponse = await Forecast.getForecastData(this.state.selectedRegionOption, this.state.forecastDuration, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime, this.state.selectedGenerationTime);
             const actualResponse = await Actual.getActualData(this.state.selectedRegionOption, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime);
 
             this.setState({ forecastData: forecastResponse });

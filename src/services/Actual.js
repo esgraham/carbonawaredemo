@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as Dates from './Dates'
+import * as Dates from './DateType'
 
 export const getActualData = async (location, dateType, startTime, endTime) => {
   var actualDates = null;
@@ -16,7 +16,7 @@ export const getActualData = async (location, dateType, startTime, endTime) => {
 
     var timeIntervalValue = dtStart.toISOString() + '/' + dtEnd.toISOString();
 
-    await axios.post('/sci-scores/marginal-carbon-intensity',
+   await axios.post('/sci-scores/marginal-carbon-intensity',
         { location: {
           locationType: 'CloudProvider',
           providerName: 'Azure',

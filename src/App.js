@@ -10,6 +10,7 @@ function App() {
 	const [selectedRegion, setRegion] = useState(); 
 	const [selectedStartTime, setStartTime] = useState(); 
 	const [selectedEndTime, setEndTime] = useState();
+	const [selectedGenerationTime, setGenerationTime] = useState();
 	const [visible, setVisible] = useState(false);
 
 	const handleRetrospectiveDurationChange = (selectedRetrospectiveDurationOption) => {
@@ -23,6 +24,9 @@ function App() {
     };
     const handleEndTimeChange = (selectedEndTime) => {
         setEndTime(selectedEndTime);
+    };
+	const handleGeneratedAtChange = (selectedGenerationTime) => {
+        setGenerationTime(selectedGenerationTime);
     };
 
 	const onClickHandle = () => {
@@ -41,7 +45,7 @@ function App() {
 							<h5 className="app-card-header">Enter Carbon Aware Information:</h5>
 							<div className="app-card-block">
 								<Selector handleRetrospectiveDurationChange={handleRetrospectiveDurationChange}  handleRegionChange={handleRegionChange}
-									 handleStartTimeChange={handleStartTimeChange} handleEndTimeChange={handleEndTimeChange} />
+									 handleStartTimeChange={handleStartTimeChange} handleEndTimeChange={handleEndTimeChange} handleGeneratedAtChange={handleGeneratedAtChange} />
 							    <button onClick={onClickHandle}>Submit</button>
 							</div>
 						</div>
@@ -57,7 +61,7 @@ function App() {
 							<h4 className="app-card-header">Savings <span className="tag tag-success" id="revenue-tag">87%</span></h4>
 							<div className="app-card-block">
 								<BarChart forcastduration='6' selectedRetrospectiveDurationOption={selectedRetrospectiveDurationOption} selectedRegionOption={selectedRegion}
-									 selectedStartTime={selectedStartTime} selectedEndTime={selectedEndTime}/>
+									 selectedStartTime={selectedStartTime} selectedEndTime={selectedEndTime} selectedGenerationTime={selectedGenerationTime}/>
 							</div>
 						</div>
 					</div>
