@@ -62,10 +62,18 @@ class BarChart extends Component {
             return null /* or a loader/spinner */
         }
 
-
         const labels = this.state.forecastData.forecastDates.FormattedDate;
-        const data1 = this.state.forecastData.forecastValues;
-        const data2 = this.state.actualData.actualValues;
+        const forecastValues = this.state.forecastData.forecastValues;
+        const actualValues = this.state.actualData.actualValues;
+
+        var forecastSum = forecastValues.reduce(function(pv, cv) { return pv + cv; }, 0);
+        var actualSum = actualValues.reduce(function(pv, cv) { return pv + cv; }, 0);
+
+        this.props.handleSavingsChange(
+        {
+            percentage: ((forecastSum-actualSum)/actualSum)*100,
+            total: actualSum-forecastSum
+        });
 
         const options = {
             indexAxis: 'y',
@@ -90,16 +98,16 @@ class BarChart extends Component {
             labels,
             datasets: [
                 {
-                    label: 'Optimal (Forecast)',
-                    data: data1,
-                    borderColor: 'rgb(0, 0, 0)',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                },
-                {
                     label: 'Original (Actual)',
-                    data: data2,
+                    data: actualValues,
                     borderColor: 'rgb(230, 0, 0)',
                     backgroundColor: 'rgba(230, 0, 0, 0.5)',
+                },
+                {
+                    label: 'Optimal (Forecast)',
+                    data: forecastValues,
+                    borderColor: 'rgb(0, 0, 0)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 },
             ],
         };

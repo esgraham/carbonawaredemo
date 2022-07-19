@@ -11,6 +11,8 @@ function App() {
 	const [selectedStartTime, setStartTime] = useState(); 
 	const [selectedEndTime, setEndTime] = useState();
 	const [selectedGenerationTime, setGenerationTime] = useState();
+	const [selectedForecastDuration, setForecastDuration] = useState();
+	const [savings, setSavings] = useState();
 	const [visible, setVisible] = useState(false);
 
 	const handleRetrospectiveDurationChange = (selectedRetrospectiveDurationOption) => {
@@ -27,6 +29,26 @@ function App() {
     };
 	const handleGeneratedAtChange = (selectedGenerationTime) => {
         setGenerationTime(selectedGenerationTime);
+    };
+	const handleForecastDurationChange = (selectedForecastDuration) => {
+        setForecastDuration(selectedForecastDuration);
+    };
+	const handleSavingsChange = (savings) => {
+		var percentage = savings.percentage;
+		var total = savings.total;
+		if (percentage<0)
+		{	percentage = Math.abs(percentage);
+			percentage = Math.round(percentage);
+			total = Math.round(total)
+			setSavings('Provides a ' + percentage + '% savings for total of '+ total + ' lbs/kilowatts');
+		}
+		else
+		{
+			percentage = Math.abs(total);
+			percentage = Math.round(percentage);
+			total = Math.round(total)
+			setSavings('Provides a ' + percentage + '% increase for total of '+ total + ' lbs/kilowatts');
+		}
     };
 
 	const onClickHandle = () => {
@@ -45,7 +67,7 @@ function App() {
 							<h5 className="app-card-header">Enter Carbon Aware Information:</h5>
 							<div className="app-card-block">
 								<Selector handleRetrospectiveDurationChange={handleRetrospectiveDurationChange}  handleRegionChange={handleRegionChange}
-									 handleStartTimeChange={handleStartTimeChange} handleEndTimeChange={handleEndTimeChange} handleGeneratedAtChange={handleGeneratedAtChange} />
+									 handleStartTimeChange={handleStartTimeChange} handleEndTimeChange={handleEndTimeChange} handleGeneratedAtChange={handleGeneratedAtChange} handleForecastDurationChange={handleForecastDurationChange} />
 							    <button onClick={onClickHandle}>Submit</button>
 							</div>
 						</div>
@@ -58,10 +80,10 @@ function App() {
 				<div className="row m-b-1">
 					<div className="col-xs-12">
 						<div className="app-card app-shadow">
-							<h4 className="app-card-header">Savings <span className="tag tag-success" id="revenue-tag">87%</span></h4>
+							<h4 className="app-card-header"><span className="tag tag-success" id="revenue-tag">{savings}</span></h4>
 							<div className="app-card-block">
-								<BarChart forcastduration='6' selectedRetrospectiveDurationOption={selectedRetrospectiveDurationOption} selectedRegionOption={selectedRegion}
-									 selectedStartTime={selectedStartTime} selectedEndTime={selectedEndTime} selectedGenerationTime={selectedGenerationTime}/>
+								<BarChart forcastduration={selectedForecastDuration} selectedRetrospectiveDurationOption={selectedRetrospectiveDurationOption} selectedRegionOption={selectedRegion}
+									 selectedStartTime={selectedStartTime} selectedEndTime={selectedEndTime} selectedGenerationTime={selectedGenerationTime} handleSavingsChange={handleSavingsChange}/>
 							</div>
 						</div>
 					</div>

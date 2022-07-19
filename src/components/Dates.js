@@ -31,8 +31,25 @@ export class Dates extends Date {
     }
 
     previousMonth = function () {
-        var prevMonth = new Date();
-        return prevMonth.setMonth(prevMonth.getMonth() - 1);
+        var prevMonth = new Dates(this);
+        prevMonth.setMonth(prevMonth.getMonth() - 1);
+        prevMonth.setDate(1);
+        return prevMonth
+    }
+
+    nextMonth = function () {
+        var nextMonth = new Dates(this);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        nextMonth.setDate(1);
+        return nextMonth
+    }
+
+    previousYear = function () {
+        var prevYear = new Dates(this);
+        prevYear.setYear(prevYear.getFullYear() - 1);
+        prevYear.setMonth(0);
+        prevYear.setDate(1);
+        return prevYear;
     }
 
     addHours = function (hours) {
