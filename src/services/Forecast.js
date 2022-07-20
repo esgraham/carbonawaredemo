@@ -60,7 +60,7 @@ export const getForecastData = async (location, forecastDuration, dateType, star
 
   var batch = JSON.stringify(forecastRequest);
 
-  await axios.post('/emissions/forecasts/batch', { batch }).then((response) => {
+  await axios.post('/emissions/forecasts/batch', batch ).then((response) => {
     forecastValues = response.data.map((forecast) => {
       return forecast.optimalDataPoint.value;
     })
