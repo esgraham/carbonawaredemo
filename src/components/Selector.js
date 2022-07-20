@@ -110,7 +110,7 @@ class Selector extends Component {
                 </div>
                 <br></br>
                 <div style={{ width: '600px' }} >
-                    <p id="header" style={{ padding: '5px' }} >Azure Batch Information</p>
+                    <h5 id="header" style={{ padding: '5px' }} >Azure Batch Information</h5>
                     <div style={{ display: 'inline-flex', padding: '5px' }} >
                         <label style={{ paddingRight: '5px' }}>Start Time</label>
                         <input type="time" onChange={this.handleStartTimeChange} defaultValue='10:00' />
@@ -129,7 +129,7 @@ class Selector extends Component {
                     </div>
                 </div>
                 <div style={{ width: '600px' }}>
-                    <p id="header">Forecast Information</p>
+                    <h5 id="header">Forecast Information</h5>
                     <div style={{ display: 'inline-flex', padding: '5px' }} >
                         <label style={{ paddingRight: '5px' }}>Forecast Generated At: </label>
                         <input type="time" onChange={this.handleGeneratedAtChange} defaultValue='10:00' />
