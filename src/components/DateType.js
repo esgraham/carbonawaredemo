@@ -1,4 +1,4 @@
-import { Dates } from '../components/Dates';
+import { Dates } from './Dates';
 
 
 export function workweekDates() {
@@ -37,7 +37,7 @@ export function nextMonthDates(date)
 }
 
 
-function monthDates(month)
+export function monthDates(month)
 {
     var numofDays = month.monthDays();
 
@@ -62,6 +62,15 @@ export function lastYear()
 {
     var date = new Dates();
     var year = date.previousYear();  
+
+    return year;
+
+}
+
+export function previousMonth(monthNum)
+{
+    var date = new Dates();
+    var year = date.previousXMonth(monthNum);  
 
     return year;
 

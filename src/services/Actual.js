@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as DateType from './DateType'
+import * as DateType from '../components/DateType'
 
 export const getActualData = async (location, dateType, startTime, endTime) => {
   var actualDates = null;
@@ -9,23 +9,28 @@ export const getActualData = async (location, dateType, startTime, endTime) => {
       break;
     case 'month': actualDates = DateType.previousMonthDates();
       break;
-      case 'year': actualDates =  await getActualYearData(location, startTime, endTime);
-      var r = 
+    case 'halfyear': actualDates = await getActualDatabyMonth(location, startTime, endTime, 6);
+      var halfyearResponse =
       {
         actualDates: {
           FormattedDate: actualDates.actualDates
         },
         actualValues: actualDates.actualValues
       };
-      return r;
+      return halfyearResponse;
+      break;
+    case 'year': actualDates = await getActualDatabyMonth(location, startTime, endTime, 12);
+      var yearResponse =
+      {
+        actualDates: {
+          FormattedDate: actualDates.actualDates
+        },
+        actualValues: actualDates.actualValues
+      };
+      return yearResponse;
       break;
     default:
     // body of default
-  }
-
-  if (dateType==='year')
-  {
-    return;
   }
 
   const actualValues = new Array();
@@ -53,28 +58,27 @@ export const getActualData = async (location, dateType, startTime, endTime) => {
   return { actualDates, actualValues };
 }
 
-export const getActualYearData = async (location, startTime, endTime) => {
+export const getActualDatabyMonth = async (location, startTime, endTime, monthNum) => {
 
   var actualDates = new Array();
   const actualValues = new Array();
 
 
-  var lastyearDate = DateType.lastYear();
-  var month = lastyearDate.previousMonth();
+  var month = DateType.previousMonth(monthNum);
 
-  for (let i = 0; i < 12; i++) {
-   
+  for (let i = 0; i < monthNum; i++) {
+
     console.log('In actual loop', i);
-    var MonthDates = DateType.nextMonthDates(month)
+    var MonthDates = DateType.monthDates(month)
     const actualMonthValues = new Array();
-    
+
 
     await Promise.all(MonthDates.Dates.map(async (date) => {
       const dtStart = new Date(date.toDateString() + ' ' + startTime);
       const dtEnd = new Date(date.toDateString() + ' ' + endTime);
-  
+
       var timeIntervalValue = dtStart.toISOString() + '/' + dtEnd.toISOString();
-  
+
       await axios.post('/sci-scores/marginal-carbon-intensity',
         {
           location: {
@@ -91,12 +95,11 @@ export const getActualYearData = async (location, startTime, endTime) => {
 
     var monthName = MonthDates.Dates[0].toLocaleString("en-us", { month: "long" });
     console.log('Actual month', monthName);
-    var actualSum = actualMonthValues.reduce(function(pv, cv) { return pv + cv; }, 0);
+    var actualSum = actualMonthValues.reduce(function (pv, cv) { return pv + cv; }, 0);
     actualValues.push(actualSum);
     actualDates.push(monthName);
 
     month = month.nextMonth();
-    console.log('month', month);
   }
 
   return { actualDates, actualValues };

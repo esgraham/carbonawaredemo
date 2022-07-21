@@ -3,6 +3,7 @@ import Select from 'react-select';
 
 const durationOptions = [
     { value: 'year', label: 'Previous Year' },
+    { value: 'halfyear', label: 'Last 6 Months'},
     { value: 'month', label: 'Last Month' },
     //{ value: 'week', label: 'Last Week' },
     { value: 'workweek', label: 'Last Work Week' },

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as DateType from './DateType'
+import * as DateType from '../components/DateType'
 import { Dates } from '../components/Dates';
 
 function parseTime(s) {
@@ -19,23 +19,28 @@ export const getForecastData = async (location, forecastDuration, dateType, star
       break;
     case 'month': forecastDates = DateType.previousMonthDates();
       break;
-      case 'year': forecastDates =  await getForecastYearData(location, forecastDuration, windowSize, generatedAt);
-      var r = 
+    case 'halfyear': forecastDates = await getForecastDatabyMonth(location, forecastDuration, windowSize, generatedAt, 6);
+      var halfyearResponse =
       {
         forecastDates: {
           FormattedDate: forecastDates.forecastDates
         },
         forecastValues: forecastDates.forecastValues
       };
-      return r;
+      return halfyearResponse;
+      break;
+    case 'year': forecastDates = await getForecastDatabyMonth(location, forecastDuration, windowSize, generatedAt, 12);
+      var yearResponse =
+      {
+        forecastDates: {
+          FormattedDate: forecastDates.forecastDates
+        },
+        forecastValues: forecastDates.forecastValues
+      };
+      return yearResponse;
       break;
     default:
     // body of default
-  }
-
-  if (dateType==='year')
-  {
-    return;
   }
 
   var forecastValues = new Array();
@@ -60,7 +65,7 @@ export const getForecastData = async (location, forecastDuration, dateType, star
 
   var batch = JSON.stringify(forecastRequest);
 
-  await axios.post('/emissions/forecasts/batch', batch ).then((response) => {
+  await axios.post('/emissions/forecasts/batch', batch).then((response) => {
     forecastValues = response.data.map((forecast) => {
       return forecast.optimalDataPoint.value;
     })
@@ -69,19 +74,18 @@ export const getForecastData = async (location, forecastDuration, dateType, star
   return { forecastDates, forecastValues };
 }
 
-export const getForecastYearData = async (location, forecastDuration, windowSize, generatedAt) => {
+export const getForecastDatabyMonth = async (location, forecastDuration, windowSize, generatedAt, monthNum) => {
 
   var forecastDates = new Array();
   var forecastValues = new Array();
 
 
-  var lastyearDate = DateType.lastYear();
-  var month = lastyearDate.previousMonth();
+  var month = DateType.previousMonth(monthNum);
 
-  for (let i = 0; i < 12; i++) {
-   
+  for (let i = 0; i < monthNum; i++) {
+
     console.log('In forcast loop', i);
-    var MonthDates = DateType.nextMonthDates(month)
+    var MonthDates = DateType.monthDates(month)
     var forecastRequest = new Array();
     var forecastMonthValues = new Array();
 
@@ -101,9 +105,9 @@ export const getForecastYearData = async (location, forecastDuration, windowSize
 
     }));
 
-    var batch = JSON.stringify(forecastRequest);
+    //var batch = JSON.stringify(forecastRequest);
 
-    await axios.post('/emissions/forecasts/batch', { batch }).then((response) => {
+    await axios.post('/emissions/forecasts/batch', forecastRequest ).then((response) => {
       forecastMonthValues = response.data.map((forecast) => {
         return forecast.optimalDataPoint.value;
       })
@@ -111,13 +115,13 @@ export const getForecastYearData = async (location, forecastDuration, windowSize
 
     var monthName = MonthDates.Dates[0].toLocaleString("en-us", { month: "long" });
     console.log('Forecast month', monthName);
-    var forecastSum = forecastMonthValues.reduce(function(pv, cv) { return pv + cv; }, 0);
+    var forecastSum = forecastMonthValues.reduce(function (pv, cv) { return pv + cv; }, 0);
     forecastValues.push(forecastSum);
     forecastDates.push(monthName);
 
     month = month.nextMonth();
   }
 
-  return {  forecastDates,  forecastValues };
+  return { forecastDates, forecastValues };
 }
 
