@@ -33,8 +33,14 @@ export const getActualData = async (location, dateType, startTime, endTime) => {
     // body of default
   }
 
-  const actualValues = new Array();
+  const actualValues = await callMarginCarbonIntensity(location, startTime, endTime, actualDates);
 
+  return { actualDates, actualValues };
+}
+
+export const callMarginCarbonIntensity = async (location, startTime, endTime, actualDates) => {
+
+  const actualValues = new Array();
   await Promise.all(actualDates.Dates.map(async (date) => {
     const dtStart = new Date(date.toDateString() + ' ' + startTime);
     const dtEnd = new Date(date.toDateString() + ' ' + endTime);
@@ -55,7 +61,31 @@ export const getActualData = async (location, dateType, startTime, endTime) => {
     })
   }));
 
-  return { actualDates, actualValues };
+  return actualValues;
+}
+
+export const callSingleMarginCarbonIntensity = async (location, startTime, windowSize) => {
+
+    const dtStart = new Date(startTime);
+    const dtEnd = new Date(startTime);
+    dtEnd.setMinutes(dtStart.getMinutes() + windowSize);
+
+    var timeIntervalValue = dtStart.toISOString() + '/' + dtEnd.toISOString();
+
+    var res = await axios.post('/sci-scores/marginal-carbon-intensity',
+      {
+        location: {
+          locationType: 'CloudProvider',
+          providerName: 'Azure',
+          regionName: location
+        },
+        timeInterval: timeIntervalValue
+      }
+    ).then((response) => {
+      return response.data.marginalCarbonIntensityValue;
+    });
+
+    return res;
 }
 
 export const getActualDatabyMonth = async (location, startTime, endTime, monthNum) => {
@@ -70,28 +100,8 @@ export const getActualDatabyMonth = async (location, startTime, endTime, monthNu
 
     console.log('In actual loop', i);
     var MonthDates = DateType.monthDates(month)
-    const actualMonthValues = new Array();
+    const actualMonthValues = await callMarginCarbonIntensity(location, startTime, endTime, MonthDates);
 
-
-    await Promise.all(MonthDates.Dates.map(async (date) => {
-      const dtStart = new Date(date.toDateString() + ' ' + startTime);
-      const dtEnd = new Date(date.toDateString() + ' ' + endTime);
-
-      var timeIntervalValue = dtStart.toISOString() + '/' + dtEnd.toISOString();
-
-      await axios.post('/sci-scores/marginal-carbon-intensity',
-        {
-          location: {
-            locationType: 'CloudProvider',
-            providerName: 'Azure',
-            regionName: location
-          },
-          timeInterval: timeIntervalValue
-        }
-      ).then((response) => {
-        actualMonthValues.push(response.data.marginalCarbonIntensityValue);
-      })
-    }));
 
     var monthName = MonthDates.Dates[0].toLocaleString("en-us", { month: "long" });
     console.log('Actual month', monthName);

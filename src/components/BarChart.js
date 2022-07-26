@@ -43,7 +43,9 @@ class BarChart extends Component {
         try {
 
             const forecastResponse = await Forecast.getForecastData(this.state.selectedRegionOption, this.state.forecastDuration, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime, this.state.selectedGenerationTime);
+            console.log(forecastResponse);
             const actualResponse = await Actual.getActualData(this.state.selectedRegionOption, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime);
+
 
             this.setState({ forecastData: forecastResponse });
             this.setState({ actualData: actualResponse });
@@ -65,15 +67,32 @@ class BarChart extends Component {
         const labels = this.state.forecastData.forecastDates.FormattedDate;
         const forecastValues = this.state.forecastData.forecastValues;
         const actualValues = this.state.actualData.actualValues;
+        const forecastActualValues = this.state.forecastData.actualValues;
+        const forecastTime = this.state.forecastData.optimalTime;
 
-        var forecastSum = forecastValues.reduce(function(pv, cv) { return pv + cv; }, 0);
-        var actualSum = actualValues.reduce(function(pv, cv) { return pv + cv; }, 0);
+        var forecastSum = forecastValues.reduce(function (pv, cv) { return pv + cv; }, 0);
+        var actualSum = actualValues.reduce(function (pv, cv) { return pv + cv; }, 0);
+        var forecastActualSum = forecastActualValues.reduce(function (pv, cv) { return pv + cv; }, 0);
 
         this.props.handleSavingsChange(
-        {
-            percentage: ((forecastSum-actualSum)/actualSum)*100,
-            total: actualSum-forecastSum
-        });
+            {
+                percentage: ((forecastActualSum - actualSum) / actualSum) * 100,
+                total: actualSum - forecastActualSum
+            });
+
+        const footer = (tooltipItems) => {
+            let time;
+
+            tooltipItems.forEach(function (tooltipItem) {
+                if (tooltipItem.datasetIndex > 0) {
+                    if (forecastTime !== null) {
+                        time = forecastTime[tooltipItem.dataIndex];
+                    }
+                    else { time = 'N/A' }
+                }
+            });
+            return 'Optimal Forecast Time: ' + time;
+        };
 
         const options = {
             indexAxis: 'y',
@@ -90,6 +109,11 @@ class BarChart extends Component {
                 title: {
                     display: true,
                     text: 'Original compared to Forecasted at ' + this.props.forcastduration + ' hours',
+                },
+                tooltip: {
+                    callbacks: {
+                        footer: footer,
+                    }
                 },
             },
         };
@@ -108,6 +132,12 @@ class BarChart extends Component {
                     data: forecastValues,
                     borderColor: 'rgb(0, 0, 0)',
                     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                },
+                {
+                    label: 'Actual (Forecast)',
+                    data: forecastActualValues,
+                    borderColor: 'rgb(244, 184, 0)',
+                    backgroundColor: 'rgba(244, 184, 0, 0.5)',
                 },
             ],
         };

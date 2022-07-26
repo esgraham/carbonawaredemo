@@ -99,7 +99,7 @@ class Selector extends Component {
                 <div style={{ width: '300px', height: '50px', padding: '5px' }}>
                     <Select
                         value={selectedRetrospectiveDurationOption}
-                        placeholder='Retrospective Time Period'
+                        placeholder='Select Time Period'
                         onChange={this.handleRetrospectiveDurationChange}
                         options={durationOptions}
                     />

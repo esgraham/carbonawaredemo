@@ -40,14 +40,14 @@ function App() {
 		{	percentage = Math.abs(percentage);
 			percentage = Math.round(percentage);
 			total = Math.round(total)
-			setSavings('Provides a ' + percentage + '% savings for total of '+ total + ' lbs/kilowatts');
+			setSavings('Provides a ' + percentage + '% savings for total of '+ total + ' gCO2eq/kWh');
 		}
 		else
 		{
 			percentage = Math.abs(total);
 			percentage = Math.round(percentage);
 			total = Math.round(total)
-			setSavings('Provides a ' + percentage + '% increase for total of '+ total + ' lbs/kilowatts');
+			setSavings('Provides a ' + percentage + '% increase for total of '+ total + ' gCO2eq/kWh');
 		}
     };
 
@@ -64,7 +64,7 @@ function App() {
 				<div className="row m-b-1">
 					<div className="col-xs-12">
 						<div className="app-card app-shadow">
-							<h5 className="app-card-header">Enter Carbon Aware Information:</h5>
+							<h5 className="app-card-header"></h5>
 							<div className="app-card-block">
 								<Selector handleRetrospectiveDurationChange={handleRetrospectiveDurationChange}  handleRegionChange={handleRegionChange}
 									 handleStartTimeChange={handleStartTimeChange} handleEndTimeChange={handleEndTimeChange} handleGeneratedAtChange={handleGeneratedAtChange} handleForecastDurationChange={handleForecastDurationChange} />
