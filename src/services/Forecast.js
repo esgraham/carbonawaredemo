@@ -22,25 +22,7 @@ export const getForecastData = async (location, forecastDuration, dateType, star
     case 'month': forecastDates = DateType.previousMonthDates();
       break;
     case 'halfyear': return await getForecastDatabyMonth(location, forecastDuration, windowSize, generatedAt, 6);
-      /*var halfyearResponse =
-      {
-        forecastDates: {
-          FormattedDate: forecastDates.forecastDates
-        },
-        forecastValues: forecastDates.forecastValues
-      };
-      return halfyearResponse;*/
-      break;
     case 'year': return await getForecastDatabyMonth(location, forecastDuration, windowSize, generatedAt, 12);
-      /*var yearResponse =
-      {
-        forecastDates: {
-          FormattedDate: forecastDates.forecastDates
-        },
-        forecastValues: forecastDates.forecastValues
-      };*/
-      //return yearResponse;
-      break;
     default:
     // body of default
   }
@@ -66,7 +48,6 @@ export const getForecastDatabyMonth = async (location, forecastDuration, windowS
     var forecast = await callForecast(location, forecastDuration, windowSize, MonthDates, generatedAt);
 
     var monthName = MonthDates.Dates[0].toLocaleString("en-us", { month: "long" });
-    console.log('Forecast month', monthName);
     forecastValues.push(forecast.values.reduce(function (pv, cv) { return pv + cv; }, 0));
     forecastActualValues.push(forecast.actualValues.reduce(function (pv, cv) { return pv + cv; }, 0));
     forecastDates.push(monthName);
@@ -94,15 +75,17 @@ const callForecast= async (location, forecastDuration, windowSize, forecastDates
   var actualValues = new Array();
 
   await Promise.all(forecastDates.Dates.map(async (date) => {
-    var dtStart = new Dates(date.toDateString() + ' ' + generatedAt);
-    var dtEnd = dtStart.addHours(parseInt(forecastDuration));
+    var dtGeneratedAt = new Dates(date.toDateString() + ' ' + generatedAt);
+    var dtEnd = dtGeneratedAt.addHours(parseInt(forecastDuration));
+    var dtStart = dtGeneratedAt.addMinutes(5);
+
     forecastRequest.push(
       {
         location: location,
-        startTime: dtStart.toISOString(),
-        endTime: dtEnd.toISOString(),
+        dataStartAt: dtStart.toISOString(),
+        dataEndAt: dtEnd.toISOString(),
         windowSize: windowSize,
-        requestedAt: dtStart.toISOString()
+        requestedAt: dtGeneratedAt.toISOString()
       }
     );
 

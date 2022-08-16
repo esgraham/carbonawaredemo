@@ -61,4 +61,10 @@ export class Dates extends Date {
         return date;
     }
 
+    addMinutes = function (minutes) {
+        var date = new Date(this);
+        date.setMinutes(this.getMinutes()+minutes);
+        return date;
+    }
+
 }

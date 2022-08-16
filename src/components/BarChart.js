@@ -43,7 +43,6 @@ class BarChart extends Component {
         try {
 
             const forecastResponse = await Forecast.getForecastData(this.state.selectedRegionOption, this.state.forecastDuration, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime, this.state.selectedGenerationTime);
-            console.log(forecastResponse);
             const actualResponse = await Actual.getActualData(this.state.selectedRegionOption, this.state.selectedRetrospectiveDurationOption, this.state.selectedStartTime, this.state.selectedEndTime);
 
 

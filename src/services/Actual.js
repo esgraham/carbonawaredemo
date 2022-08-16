@@ -40,24 +40,25 @@ export const getActualData = async (location, dateType, startTime, endTime) => {
 
 export const callMarginCarbonIntensity = async (location, startTime, endTime, actualDates) => {
 
-  const actualValues = new Array();
+  var actualValues = new Array();
+  var actualRequest = new Array();
+
   await Promise.all(actualDates.Dates.map(async (date) => {
     const dtStart = new Date(date.toDateString() + ' ' + startTime);
     const dtEnd = new Date(date.toDateString() + ' ' + endTime);
 
-    var timeIntervalValue = dtStart.toISOString() + '/' + dtEnd.toISOString();
-
-    await axios.post('/sci-scores/marginal-carbon-intensity',
+    actualRequest.push(
       {
-        location: {
-          locationType: 'CloudProvider',
-          providerName: 'Azure',
-          regionName: location
-        },
-        timeInterval: timeIntervalValue
+        location: location,
+        startTime: dtStart.toISOString(),
+        endTime: dtEnd.toISOString()
       }
-    ).then((response) => {
-      actualValues.push(response.data.marginalCarbonIntensityValue);
+    );
+
+    await axios.post('/emissions/average-carbon-intensity/batch',  actualRequest).then((response) => {
+      actualValues = response.data.map((results) => {
+        return results.carbonIntensity;
+      })
     })
   }));
 
@@ -70,19 +71,16 @@ export const callSingleMarginCarbonIntensity = async (location, startTime, windo
     const dtEnd = new Date(startTime);
     dtEnd.setMinutes(dtStart.getMinutes() + windowSize);
 
-    var timeIntervalValue = dtStart.toISOString() + '/' + dtEnd.toISOString();
-
-    var res = await axios.post('/sci-scores/marginal-carbon-intensity',
+    var res = await axios.get('/emissions/average-carbon-intensity',
+    { params: 
       {
-        location: {
-          locationType: 'CloudProvider',
-          providerName: 'Azure',
-          regionName: location
-        },
-        timeInterval: timeIntervalValue
+        location: location,
+        startTime: dtStart.toISOString(),
+        endTime: dtEnd.toISOString()
       }
+    }
     ).then((response) => {
-      return response.data.marginalCarbonIntensityValue;
+      return response.data.carbonIntensity;
     });
 
     return res;
@@ -98,13 +96,11 @@ export const getActualDatabyMonth = async (location, startTime, endTime, monthNu
 
   for (let i = 0; i < monthNum; i++) {
 
-    console.log('In actual loop', i);
     var MonthDates = DateType.monthDates(month)
     const actualMonthValues = await callMarginCarbonIntensity(location, startTime, endTime, MonthDates);
 
 
     var monthName = MonthDates.Dates[0].toLocaleString("en-us", { month: "long" });
-    console.log('Actual month', monthName);
     var actualSum = actualMonthValues.reduce(function (pv, cv) { return pv + cv; }, 0);
     actualValues.push(actualSum);
     actualDates.push(monthName);
