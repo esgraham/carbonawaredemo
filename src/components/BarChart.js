@@ -69,7 +69,6 @@ class BarChart extends Component {
         const forecastActualValues = this.state.forecastData.actualValues;
         const forecastTime = this.state.forecastData.optimalTime;
 
-        var forecastSum = forecastValues.reduce(function (pv, cv) { return pv + cv; }, 0);
         var actualSum = actualValues.reduce(function (pv, cv) { return pv + cv; }, 0);
         var forecastActualSum = forecastActualValues.reduce(function (pv, cv) { return pv + cv; }, 0);
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-array-constructor */
 import axios from 'axios';
 import * as DateType from '../components/DateType'
 import { Dates } from '../components/Dates';

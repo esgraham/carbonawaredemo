@@ -1,3 +1,4 @@
+/* eslint-disable no-array-constructor */
 import axios from 'axios';
 import * as DateType from '../components/DateType'
 
@@ -18,7 +19,6 @@ export const getActualData = async (location, dateType, startTime, endTime) => {
         actualValues: actualDates.actualValues
       };
       return halfyearResponse;
-      break;
     case 'year': actualDates = await getActualDatabyMonth(location, startTime, endTime, 12);
       var yearResponse =
       {
@@ -28,7 +28,6 @@ export const getActualData = async (location, dateType, startTime, endTime) => {
         actualValues: actualDates.actualValues
       };
       return yearResponse;
-      break;
     default:
     // body of default
   }
